@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Caesar Cipher</title>
+</head>
+<body>
+  <h1>Caesar Cipher</h1>
+  <label for="plaintext">Enter the plaintext:</label>
+  <input type="text" id="plaintext" />
+  <label for="shift">Enter the shift value:</label>
+  <input type="number" id="shift" />
+  <button onclick="encrypt()">Encrypt</button>
+  <button onclick="decrypt()">Decrypt</button>
+  <p id="result"></p>
+
+  <script>
+    // Encryption function for Caesar cipher
+    function caesarEncrypt(plaintext, shift) {
+      return plaintext
+        .split('')
+        .map((char) => {
+          if (char.match(/[a-zA-Z]/)) {
+            const baseCharCode = char.toLowerCase() === char ? 'a'.charCodeAt(0) : 'A'.charCodeAt(0);
+            const charCode = char.charCodeAt(0) - baseCharCode;
+            const shiftedCharCode = (charCode + shift) % 26;
+            return String.fromCharCode(shiftedCharCode + baseCharCode);
+          }
+          return char;
+        })
+        .join('');
+    }
+
+    // Decryption function for Caesar cipher
+    function caesarDecrypt(ciphertext, shift) {
+      return caesarEncrypt(ciphertext, 26 - shift);
+    }
+
+    // Cipher function that takes Encryption and Decryption functions to process the data
+    function cipher(text, operation, shift) {
+      if (operation === 'encrypt') {
+        return caesarEncrypt(text, shift);
+      } else if (operation === 'decrypt') {
+        return caesarDecrypt(text, shift);
+      } else {
+        throw new Error('Invalid operation. Use "encrypt" or "decrypt".');
+      }
+    }
+
+    function encrypt() {
+      const plaintext = document.getElementById('plaintext').value;
+      const shift = parseInt(document.getElementById('shift').value);
+      const encryptedText = cipher(plaintext, 'encrypt', shift);
+      document.getElementById('result').innerText = 'Encrypted: ' + encryptedText;
+    }
+
+    function decrypt() {
+      const ciphertext = document.getElementById('plaintext').value;
+      const shift = parseInt(document.getElementById('shift').value);
+      const decryptedText = cipher(ciphertext, 'decrypt', shift);
+      document.getElementById('result').innerText = 'Decrypted: ' + decryptedText;
+    }
+  </script>
+</body>
+</html>
